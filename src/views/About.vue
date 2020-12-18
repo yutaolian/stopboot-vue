@@ -18,7 +18,7 @@
             <el-main class="main">
                 <i v-if="!paramsInfo" class="el-icon-circle-plus" @click="open"></i>
                 <el-container v-else class="">
-                    <el-tabs v-model="activeName" type="border-card" >
+                    <el-tabs v-model="activeName" type="border-card">
                         <el-tab-pane label="接口信息" name="first">接口信息
                         </el-tab-pane>
                         <el-tab-pane label="请求参数" name="second">
@@ -52,6 +52,8 @@
     </el-container>
 </template>
 <script>
+    import {TestCreateRequest} from "../sdk/modules/test/test_requets";
+
     export default {
         data() {
             return {
@@ -112,6 +114,10 @@
             },
             show() {
                 this.showTree = !this.showTree;
+
+                var test = new TestCreateRequest();
+                test.setParams({id: 1})
+                test.call();
             }
 
         },
@@ -153,12 +159,13 @@
             position: relative;
             /*background-color: #42b983;*/
 
-          .el-container{
-            height: 100%;
-            .el-tabs{
-              width: 100%;
+            .el-container {
+                height: 100%;
+
+                .el-tabs {
+                    width: 100%;
+                }
             }
-          }
         }
 
         .el-icon-circle-plus {

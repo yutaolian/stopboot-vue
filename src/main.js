@@ -6,6 +6,9 @@ import "./plugins/element.js";
 
 Vue.config.productionTip = false;
 
+import sdk from './sdk'
+Vue.prototype.sdk = sdk
+
 new Vue({
   router,
   store,
