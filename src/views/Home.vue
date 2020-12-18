@@ -27,8 +27,7 @@
         </el-row>
     </el-main>
 
-    <el-button>开始创作</el-button>
-    <p>跳转到编辑页面</p>
+    <el-button ><router-link :to="{path:'/about'}">开始创作</router-link></el-button>
     <el-footer>Footer</el-footer>
   </el-container>
 </template>
