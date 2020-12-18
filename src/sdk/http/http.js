@@ -24,7 +24,7 @@ const projectName = "stopboot-vue";
 
 axios.interceptors.request.use(
   config => {
-    const token = 'ccccc';//getToken()
+    const token = sessionStorage.getItem("token");//getToken()
     token && (config.headers.Authorization = token)
     //测出可添加公共参数
     const defaultParams = {}
