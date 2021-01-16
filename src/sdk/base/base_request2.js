@@ -26,10 +26,8 @@ export class BaseRequest2 {
     }
 
     call() {
-        console.log('---BaseRequest2----')
-        console.log(this.path, this.method, this.params);
         return new Promise(resolve => {
-            api({"path": "/db/bind", "method": "post"}, this.params)
+            api({"path": this.path, "method": this.method}, this.params)
                 .then(response => {
                     resolve(response)
                 })

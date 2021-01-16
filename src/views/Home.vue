@@ -1,7 +1,25 @@
 <template>
   <el-container>
     <el-header>
-      Header <el-button @click="dialogTableVisible= true">登录</el-button></el-header>
+<el-container height="60">
+
+  <div class="block"><el-avatar :size="50" :src="circleUrl"></el-avatar></div>
+  <el-menu
+          :default-active="activeIndex2"
+          class="el-menu-demo"
+          mode="horizontal"
+          @select="handleSelect"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b">
+    <el-menu-item index="1">我的项目</el-menu-item>
+  </el-menu>
+
+  <el-button @click="dialogTableVisible= true">登录</el-button>
+</el-container>
+
+
+    </el-header>
     <el-main>
       <el-carousel height="600px" style="margin-bottom:40px">
         <el-carousel-item v-for="(item, index) in imgList" :key="index">
@@ -76,12 +94,17 @@
 
 <script>
 // @ is an alias to /src
+
+const mysql = require('mysql2');
+
 import { AuthLoginRequest } from "@/sdk/modules/auth/login";
 export default {
   name: "Home",
   components: {},
   data() {
     return {
+      circleUrl:"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      activeIndex2:1,
       imgList: [
         "//img95.699pic.com/photo/40186/8252.jpg_wh860.jpg",
         "//img95.699pic.com/photo/40187/3069.jpg_wh860.jpg",
@@ -99,6 +122,33 @@ export default {
         password: [{ required: true, trigger: "blur", message: "请输入密码" }],
       },
     };
+  },
+  mounted() {
+
+// create the connection to database
+    const connection = mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      database: 'test'
+    });
+
+// simple query
+    connection.query(
+            'SELECT * FROM `table` WHERE `name` = "Page" AND `age` > 45',
+            function(err, results, fields) {
+              console.log(results); // results contains rows returned by server
+              console.log(fields); // fields contains extra meta data about results, if available
+            }
+    );
+
+// with placeholder
+    connection.query(
+            'SELECT * FROM `table` WHERE `name` = ? AND `age` > ?',
+            ['Page', 45],
+            function(err, results) {
+              console.log(results);
+            }
+    );
   },
   methods: {
     handleLogin() {

@@ -5,31 +5,63 @@
             <el-aside class="aside" v-if="showTree">
                 <el-button @click="show()">收起</el-button>
                 <el-container>
-                    <el-tree :key=data.id
-                             default-expand-all
-                             :data="data"
-                             @node-click="handleNodeClick"
-                    ></el-tree>
+                    <div class="overflow">
+                        <el-tree
+                                class="over"
+                                :data="moduleList"
+                                node-key="id"
+                                v-loading="loading"
+                                :props="defaultProps"
+                                default-expand-all
+                                @node-click="handleNodeClick"
+                                :expand-on-click-node="false">
+            <span class="custom-tree-node" slot-scope="{ data }">
+              <span :class="{active:moduleId==data.id}">{{ data.name }}({{ data.simpleName }})</span>
+              <span>
+                <el-button
+                        type="text"
+                        size="mini"
+                        @click="() => addMethod(data)">
+                  添加方法
+                </el-button>
+                  <el-button
+                          type="text"
+                          size="mini"
+                          @click="() => moduleDetail(data)">
+                  编辑
+                </el-button>
+                <el-button
+                        type="text"
+                        size="mini"
+                        @click="() => moduleDelete(data)">
+                  删除
+                </el-button>
+              </span>
+            </span>
+                        </el-tree>
+                    </div>
                 </el-container>
             </el-aside>
             <el-aside class="hide-aside" v-else>
                 <el-button @click="show()">展开</el-button>
             </el-aside>
             <el-main class="main">
-                <i v-if="!paramsInfo" class="el-icon-circle-plus" @click="open"></i>
+                <i v-if="!paramsInfo" class="el-icon-circle-plus" @click="open">创建接口</i>
                 <el-container v-else class="">
                     <el-tabs v-model="activeName" type="border-card">
                         <el-tab-pane label="接口信息" name="first">接口信息
                         </el-tab-pane>
                         <el-tab-pane label="请求参数" name="second">
                             <el-container>
-                                请求参数
+                                请求参数222
+                                <br>
                                 <i class="el-icon-circle-plus" @click="open"></i>
                             </el-container>
                         </el-tab-pane>
                         <el-tab-pane label="响应参数" name="third">
                             <el-container>
                                 响应参数
+                                <br>
                                 <i class="el-icon-circle-plus" @click="open"></i>
                             </el-container>
                         </el-tab-pane>
@@ -52,15 +84,39 @@
     </el-container>
 </template>
 <script>
+    import {ModuleTreeRequest} from '@/sdk/modules/module/tree'
     import {TestCreateRequest} from "../sdk/modules/test/test_requets";
 
     export default {
         data() {
             return {
+                moduleTreeParams: {
+                    projectId: undefined,
+                },
+                tableLoading: false,
+                dialogFormVisible: false,
+                projectId: undefined,
+                moduleId: undefined,
+                moduleName: undefined,
+                modulePath: undefined,
+                moduleMethodListData: [],
+                loading: false,
                 paramsInfo: false,
                 showTree: true,
                 dialogVisible: false,
                 activeName: "first",
+                moduleList: [],
+                defaultProps: {
+                    children: 'children',
+                    label: 'name'
+                },
+                user: {
+                    author: undefined,
+                    description: undefined,
+                    name: undefined,
+                    simpleName: undefined,
+                    version: undefined
+                },
                 data: [{
                     id: 1,
                     label: '一级 1',
@@ -98,6 +154,9 @@
                 }]
             };
         },
+        mounted() {
+            this.loadProjectModuleTree();
+        },
         methods: {
             handleNodeClick(data, node) {
                 console.log(data);
@@ -109,6 +168,67 @@
                 }
 
             },
+            loadProjectModuleTree() {
+                this.loading = true
+                this.moduleList = []
+                let request = new ModuleTreeRequest();
+                request.setParams(this.moduleTreeParams)
+                request.api().then(res => {
+                    this.moduleList = res.data.list
+                    this.loading = false
+                    //默认加载一条数据
+                    let firstData = this.moduleList[0]
+                    this.loadMethod(firstData)
+                }).catch(err => {
+                    this.loading = false
+                })
+            },
+            loadMethod(data) {
+                this.tableLoading = true
+                this.moduleId = data.id
+                this.moduleName = data.name
+                this.moduleMethodListData = []
+                this.projectModuleMethodCreateRowData.moduleId = data.id
+                this.projectModuleMethodCreateRowData.moduleName = data.name
+                this.projectModuleMethodCreateRowData.modulePath = data.path
+                const request = new MethodListRequest()
+                request.setParams({moduleId: data.id})
+                request.api().then(res => {
+                    this.moduleMethodListData = res.data.list
+                    this.tableLoading = false
+                })
+            },
+            /**
+             * 添加方法
+             */
+            addMethod(data) {
+                console.log("---------data--------",data)
+                // if (this.moduleId) {
+                //     this.projectModuleMethodCreateRowData.projectId = this.$route.query.projectId
+                //     this.projectModuleMethodCreateRowData.moduleId = data.id
+                //     this.projectModuleMethodCreateRowData.moduleFullPath = data.fullPath
+                //     this.$refs.projectModuleMethodCreate.dialogFormVisible = true
+                // } else {
+                //     this.$message({
+                //         type: 'error',
+                //         message: '请选择模块'
+                //     })
+                // }
+            },
+            updateMethod(index, row) {
+                //获得模块信息
+                // this.moduleDetailQuery.id=row.moduleId
+                // const request = new ModuleDetailRequest()
+                // request.setParams(this.moduleDetailQuery)
+                // request.api().then(res => {
+                //     console.log("---res--",res.data)
+                //     this.projectModuleMethodUpdateRowData = Object.assign({}, row)
+                //     this.projectModuleMethodUpdateRowData.moduleId = row.moduleId
+                //     this.projectModuleMethodUpdateRowData.moduleName = res.data.name
+                //     this.projectModuleMethodUpdateRowData.moduleFullPath = res.data.fullPath
+                //     this.$refs.projectModuleMethodUpdate.dialogFormVisible = true
+                // })
+            },
             open() {
                 this.dialogVisible = true
             },
@@ -116,7 +236,7 @@
                 this.showTree = !this.showTree;
 
                 var test = new TestCreateRequest();
-                test.setParams({id: 1})
+                test.setParams(user)
                 test.call();
             }
 
