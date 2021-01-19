@@ -1,56 +1,73 @@
 <template>
   <el-container>
-    <el-header>
-<el-container height="60">
-
-  <div class="block"><el-avatar :size="50" :src="circleUrl"></el-avatar></div>
-  <el-menu
-          :default-active="activeIndex2"
-          class="el-menu-demo"
-          mode="horizontal"
-          @select="handleSelect"
-          background-color="#545c64"
-          text-color="#fff"
-          active-text-color="#ffd04b">
-    <el-menu-item index="1">我的项目</el-menu-item>
-  </el-menu>
-
-  <el-button @click="dialogTableVisible= true">登录</el-button>
-</el-container>
-
-
-    </el-header>
+    <div class="headerBox" direction="horizontal">
+      <div class="header">
+        <div class="logoBox">
+          <img src="../assets/logo.png" alt="" />
+          <h1>Stop Boot</h1>
+        </div>
+        <div>
+          <!-- <el-avatar :siz  e="50" :src="circleUrl"></el-avatar> -->
+          <el-button @click="dialogTableVisible = true">登录</el-button>
+        </div>
+      </div>
+      <div class="content">
+        <div>StopBoot</div>
+        <p>一站式代码生成工具，三步完成一个后台项目</p>
+        <div>
+          <el-button type="primary" round @click="$router.push('/project')">开始你的创作
+          </el-button>
+        </div>
+      </div>
+    </div>
     <el-main>
-      <el-carousel height="600px" style="margin-bottom:40px">
-        <el-carousel-item v-for="(item, index) in imgList" :key="index">
-          <img :src="item" class="banner" />
-        </el-carousel-item>
-      </el-carousel>
-      <el-row :gutter="40">
+      <div class="title">
+        创作步骤
+      </div>
+      <el-row :gutter="20">
         <el-col :span="8">
-          <img
-            src="//img95.699pic.com/photo/40186/8252.jpg_wh860.jpg"
-            class="imgbox"
-          />
+          <el-card shadow="hover">
+            <div class="desing-step-num">
+              1
+            </div>
+            <div class="desing-step-title">
+              创建项目
+            </div>
+          </el-card>
         </el-col>
-        <el-col :span="8"
-          ><img
-            src="//img95.699pic.com/photo/40186/8252.jpg_wh860.jpg"
-            class="imgbox"
-        /></el-col>
-        <el-col :span="8"
-          ><img
-            src="//img95.699pic.com/photo/40186/8252.jpg_wh860.jpg"
-            class="imgbox"
-        /></el-col>
+        <el-col :span="8">
+          <el-card shadow="hover">
+            <div class="desing-step-num">
+              2
+            </div>
+            <div class="desing-step-title">
+              编辑接口
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="8">
+          <el-card shadow="hover">
+            <div class="desing-step-num">
+              3
+            </div>
+            <div class="desing-step-title">
+              生成代码
+            </div>
+          </el-card>
+        </el-col>
       </el-row>
     </el-main>
 
-    <el-button
+    <!-- <el-button
       ><router-link :to="{ path: '/about' }">开始创作</router-link></el-button
-    >
-    <el-footer>Footer</el-footer>
-    <el-dialog title="登录" :visible.sync="dialogTableVisible">
+    > -->
+    <el-footer>
+      <span>©2021</span
+      ><el-link href="https://beian.miit.gov.cn/#/Integrated/index"
+        >晋ICP备20005880号-2</el-link
+      >
+    </el-footer>
+    <el-dialog title="登录" width="450px" :visible.sync="dialogTableVisible">
       <el-form
         ref="loginForm"
         :model="loginForm"
@@ -73,10 +90,10 @@
 
         <el-form-item prop="password">
           <el-input
-            :key="passwordType"
+            key="password"
             ref="password"
             v-model="loginForm.password"
-            :type="passwordType"
+            type="password"
             placeholder="Password"
             name="password"
             tabindex="2"
@@ -95,60 +112,29 @@
 <script>
 // @ is an alias to /src
 
-const mysql = require('mysql2');
-
 import { AuthLoginRequest } from "@/sdk/modules/auth/login";
+import { setCookies } from "@/utils/cookies-util.js";
 export default {
   name: "Home",
   components: {},
   data() {
     return {
-      circleUrl:"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      activeIndex2:1,
-      imgList: [
-        "//img95.699pic.com/photo/40186/8252.jpg_wh860.jpg",
-        "//img95.699pic.com/photo/40187/3069.jpg_wh860.jpg",
-        "//img95.699pic.com/photo/40186/8252.jpg_wh860.jpg",
-        "//img95.699pic.com/photo/40187/3069.jpg_wh860.jpg",
-      ],
       dialogTableVisible: false,
       loginForm: {
         username: "",
         password: "",
       },
-      passwordType: "password",
       loginRules: {
         username: [{ required: true, trigger: "blur", message: "请输入账号" }],
         password: [{ required: true, trigger: "blur", message: "请输入密码" }],
       },
     };
   },
-  mounted() {
-
-// create the connection to database
-    const connection = mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      database: 'test'
-    });
-
-// simple query
-    connection.query(
-            'SELECT * FROM `table` WHERE `name` = "Page" AND `age` > 45',
-            function(err, results, fields) {
-              console.log(results); // results contains rows returned by server
-              console.log(fields); // fields contains extra meta data about results, if available
-            }
-    );
-
-// with placeholder
-    connection.query(
-            'SELECT * FROM `table` WHERE `name` = ? AND `age` > ?',
-            ['Page', 45],
-            function(err, results) {
-              console.log(results);
-            }
-    );
+  mounted() {},
+  computed: {
+    token() {
+      return;
+    },
   },
   methods: {
     handleLogin() {
@@ -164,11 +150,10 @@ export default {
               message: " 登录成功",
               type: "success",
             });
-            sessionStorage.setItem("token", res.data.token);
-            sessionStorage.setItem(
-              "userInfo",
-              JSON.stringify(res.data.userInfo)
-            );
+            setCookies("Authorization", res.data.token);
+            setCookies("userInfo", JSON.stringify(res.data.userInfo));
+            setCookies("name", res.data.userInfo.name);
+            setCookies("avatar", res.data.userInfo.avatar);
           });
         } else {
           console.log("login 参数错误");
@@ -180,24 +165,76 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.el-header,
-.el-footer {
-  background-color: #b3c0d1;
+.headerBox {
+  // background-color:  #b3c0d1;#EBF6FE
+  background: -webkit-linear-gradient(top, #ffffff, #ebf6fe);
   color: #333;
-  text-align: center;
-  line-height: 60px;
+  display: flex;
+  height: 450px;
+  align-items: center;
+  flex-direction: column;
+  .header {
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1280px;
+  }
+  .logoBox {
+    display: flex;
+    align-items: center;
+    & > img {
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+    }
+    & > h1 {
+      font-size: 18px;
+    }
+  }
+  .content {
+    height: 390px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 60px;
+    font-weight: 700;
+    & > p {
+      font-size: 24px;
+    }
+  }
 }
 .el-main {
   width: 1280px;
   padding: 0;
   margin: 0 auto;
   overflow-x: hidden;
+  height: calc(100vh - 450px - 60px);
+  .title {
+    padding: 20px 0;
+    font-size: 30px;
+    color: #3e3e3e;
+  }
+  .desing-step-num {
+    width: 100%;
+    height: 120px;
+    text-align: center;
+    line-height: 100px;
+    font-size: 50px;
+  }
+  .desing-step-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+  }
 }
-.banner {
-  width: 100%;
-}
-.imgbox {
-  width: 100%;
-  display: block;
+
+.el-footer {
+  text-align: center;
+  line-height: 60px;
+  & > span {
+    font-size: 14px;
+  }
 }
 </style>

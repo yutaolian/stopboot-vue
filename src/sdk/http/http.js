@@ -1,6 +1,7 @@
 import axios from 'axios'
 // element vue消息提示
 import {Message} from 'element-ui'
+import {getCookies} from "@/utils/cookies-util"
 // import {getToken, setToken, removeToken} from '@/utils/tokenUtil'
 // import defaultSettings from '@/config/settings'
 // import {Msg} from '../msg/index'
@@ -24,7 +25,7 @@ const projectName = "stopboot-vue";
 
 axios.interceptors.request.use(
   config => {
-    const token = sessionStorage.getItem("token");//getToken()
+    const token = getCookies("Authorization");//getToken()
     token && (config.headers.Authorization = token)
     //测出可添加公共参数
     const defaultParams = {}
@@ -74,6 +75,8 @@ export function post(url, params = {}) {
         // this.$router.push({
         //   path: "/login"
         // });
+        sessionStorage.removeItem("token")
+        sessionStorage.removeItem("userInfo")
         Message.error(response.data['failMsg'])
         console.info('----------------------权限验证失败 start-------------------------')
         console.info('❌ ' + projectName + ' js sdk url:️', url)

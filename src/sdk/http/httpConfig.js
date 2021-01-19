@@ -1,7 +1,8 @@
 import { get, post } from '@/sdk/http/http'
 // 自定义api地址
-const baseURL = 'https://www.stopboot.com/api'
+// const baseURL = 'https://www.stopboot.com/api'
 // const baseURL = 'http://localhost:10100/api'
+const baseURL = 'http://192.168.1.104:10100/api'
 // let baseURL
 // if (process.env.NODE_ENV == 'production') {
 //   baseURL =  'http://kw.banyuankeji.com/api'
