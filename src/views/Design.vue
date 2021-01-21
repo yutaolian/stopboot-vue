@@ -2,7 +2,7 @@
   <div>
     <Header :title="projectName" />
     <div class="content">
-      <el-row :gutter="30" v-if="moduleList.length == 0" style="padding:30px">
+      <el-row :gutter="30" v-if="true" style="padding:30px">
         <el-col :span="3">
           <el-card :body-style="{ padding: '0px' }" shadow="hover">
             <div class="image-box">
@@ -13,22 +13,38 @@
         </el-col>
       </el-row>
       <div class="container" v-else>
-        <div class="modules">
+        <div class="modules-list">
           模块列表
         </div>
-        <div class="methods" v-if="true">
-          方法列表
-        </div>
-        <el-row v-else :gutter="30" style="padding:30px">
-            <el-col :span="24">
-              <el-card :body-style="{ padding: '0px' }" shadow="hover">
-                <div class="image-box1">
-                  <img src="../assets/plus.png" />
-                  <span>创建方法</span>
+        <div class="modules-info">
+          <div class="modules-header">模块信息</div>
+          <div class="methods-contariner">
+            <el-row v-if="false" :gutter="30" style="padding:30px">
+              <el-col :span="24">
+                <el-card :body-style="{ padding: '0px' }" shadow="hover">
+                  <div class="image-box1">
+                    <img src="../assets/plus.png" />
+                    <span>创建方法</span>
+                  </div>
+                </el-card>
+              </el-col>
+            </el-row>
+
+            <div v-else class="methods-box">
+              <div class="methods-list">
+                方法列表
+              </div>
+              <div class="methods-info">
+                <div class="methods-header">
+                  方法头
                 </div>
-              </el-card>
-            </el-col>
-          </el-row>
+                <div class="methods-content">
+                  方法实现
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -94,7 +110,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .content {
-  .image-box1{
+  .image-box1 {
     width: 200px;
     height: 200px;
   }
@@ -121,12 +137,49 @@ export default {
   .container {
     display: flex;
     height: calc(100vh - 60px);
-    .modules {
+    .modules-list {
       height: 100%;
-      width: 200px;
+      width: 300px;
       background: chartreuse;
+      overflow: auto;
     }
-    .methods{
+    .modules-info {
+      .modules-header {
+        background: chocolate;
+        height: 60px;
+        width: calc(100vw - 300px);
+      }
+      .methods-contariner {
+        background: cornflowerblue;
+        width: calc(100vw - 300px);
+        height: calc(100vh - 120px);
+        .methods-box {
+          display: flex;
+          .methods-list {
+            width: 200px;
+            height: calc(100vh - 120px);
+            background: darkorchid;
+          }
+          .methods-info {
+            background: red;
+            width: calc(100vw - 500px);
+            height: calc(100vh - 120px);
+            .methods-header {
+              height: 60px;
+              width: calc(100vw - 500px);
+              background: deeppink;
+            }
+            .methods-content {
+              height: calc(100vh - 180px);
+              width: calc(100vw - 500px);
+              background: dodgerblue;
+            }
+          }
+        }
+      }
+    }
+
+    .methods {
       width: 200px;
       background: red;
     }
