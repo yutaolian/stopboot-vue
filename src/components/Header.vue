@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="logoBox">
+    <div class="logoBox" @click="$router.push('/')">
       <img src="../assets/logo.png" alt="" />
       <h1>Stop Boot</h1>
       <span v-if="title">{{title}}</span>
@@ -23,6 +23,7 @@ export default {
   align-items: center;
   width: 100%;
   padding: 0 14px;
+  box-sizing: border-box;
 }
 .logoBox {
   display: flex;
