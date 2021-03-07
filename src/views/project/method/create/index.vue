@@ -1,6 +1,6 @@
 <template>
   <!--新增-->
-  <el-dialog title="新增" :visible.sync="dialogFormVisible" width="80%">
+  <el-dialog title="新增方法" :visible.sync="dialogFormVisible" width="80%">
     <el-form
       ref="methodCreateRef"
       :model="methodCreateParams"

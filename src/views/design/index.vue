@@ -2,16 +2,15 @@
   <div>
     <Header :title="projectName" />
     <div class="content">
-      <el-row :gutter="30" v-if="moduleList.lenth == 0">
-        <el-col :span="3">
+        <div v-if="moduleList.length == 0" class="add-module-box">
           <el-card :body-style="{ padding: '0px' }" shadow="hover">
             <div class="image-box" @click="addModule">
               <img src="../../assets/plus.png" />
               <span>创建模块</span>
             </div>
           </el-card>
-        </el-col>
-      </el-row>
+        </div>
+
       <div class="container" v-else>
         <div class="modules-list">
           <div class="box">
@@ -54,11 +53,6 @@
                 <el-col :span="8"> </el-col>
               </el-row>
             </el-card>
-
-            <!-- <div>
-              当前模块：
-              {{ currentModule.name }}
-            </div> -->
           </div>
           <div class="methods-contariner">
             <div class="sb-box">
@@ -69,7 +63,7 @@
                 shadow="hover"
                 @click.native="addMethod"
               >
-                <div>
+                <div class="inner">
                   <img src="../../assets/plus.png" />
                   <span>创建方法</span>
                 </div>
@@ -123,11 +117,32 @@
                     </el-card>
                   </div>
                   <div class="methods-content">
-                    <div class="sb-box">
-                      方法实现
+                    <div class="mc-box sb-box">
+                      <!-- <project-module-method-single-body
+                        :row-data="projectModuleMethodBodyRowData"
+                      />
+                      <project-module-method-sql-body
+                        :row-data="projectModuleMethodBodyRowData"
+                      /> -->
+                      <project-module-method-complex-body
+                        :row-data="projectModuleMethodBodyRowData"
+                      />
                     </div>
                   </div>
                 </div>
+
+                <el-card
+                  v-else
+                  class="image-box1"
+                  :body-style="{ padding: '0px' }"
+                  shadow="hover"
+                  @click.native="addMethod"
+                >
+                  <div class="inner">
+                    <img src="../../assets/plus.png" />
+                    <span>创建方法</span>
+                  </div>
+                </el-card>
               </div>
             </div>
           </div>
@@ -172,6 +187,10 @@ import ProjectModuleUpdate from "@/views/project/module/update";
 import ProjectModuleMethodCreate from "@/views/project/method/create";
 import projectModuleMethodUpdate from "@/views/project/method/update";
 
+import ProjectModuleMethodSingleBody from "@/views/project/method/body/single/index";
+import ProjectModuleMethodSqlBody from "@/views/project/method/body/sql/index";
+import ProjectModuleMethodComplexBody from "@/views/project/method/body/complex/index";
+
 export default {
   components: {
     Header,
@@ -179,6 +198,9 @@ export default {
     ProjectModuleUpdate,
     ProjectModuleMethodCreate,
     projectModuleMethodUpdate,
+    ProjectModuleMethodSingleBody,
+    ProjectModuleMethodSqlBody,
+    ProjectModuleMethodComplexBody,
   },
   data() {
     return {
@@ -206,6 +228,12 @@ export default {
         moduleList: [],
       },
       projectModuleMethodCreateRowData: {
+        projectId: undefined,
+        moduleId: undefined,
+        moduleName: undefined,
+        modulePath: undefined,
+      },
+      projectModuleMethodBodyRowData: {
         projectId: undefined,
         moduleId: undefined,
         moduleName: undefined,
@@ -367,6 +395,7 @@ export default {
     },
     //设置方法的逻辑5
     setMethodLogic(row) {
+      this.projectModuleMethodBodyRowData = Object.assign({}, row);
       this.showAdd = true;
       let path = this.$route.path;
       this.$router.replace({
@@ -417,6 +446,21 @@ export default {
     width: 200px;
     height: 200px;
     margin: 8px;
+    .inner {
+      display: flex;
+      height: 200px;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      &>img{
+        margin-bottom:  20px;
+      }
+    }
+  }
+  .add-module-box {
+    width: 200px;
+    height: 200px;
+    padding: 12px;
   }
   .image-box {
     width: 100%;
@@ -529,6 +573,10 @@ export default {
               padding: 0px 8px 16px 0;
               box-sizing: border-box;
               //   background: dodgerblue;
+              .mc-box {
+                padding: 20px;
+                overflow: auto;
+              }
             }
           }
         }
