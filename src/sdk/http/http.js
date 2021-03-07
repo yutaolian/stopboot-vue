@@ -1,7 +1,7 @@
 import axios from 'axios'
 // element vue消息提示
 import {Message} from 'element-ui'
-import {getCookies} from "@/utils/cookies-util"
+import {getCookies,removeCookies} from "@/utils/cookies-util"
 // import {getToken, setToken, removeToken} from '@/utils/tokenUtil'
 // import defaultSettings from '@/config/settings'
 // import {Msg} from '../msg/index'
@@ -75,6 +75,7 @@ export function post(url, params = {}) {
         // this.$router.push({
         //   path: "/login"
         // });
+        removeCookies("Authorization")
         sessionStorage.removeItem("token")
         sessionStorage.removeItem("userInfo")
         Message.error(response.data['failMsg'])

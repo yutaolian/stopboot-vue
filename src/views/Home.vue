@@ -6,8 +6,27 @@
           <img src="../assets/logo.png" alt="" />
           <h1>Stop Boot</h1>
         </div>
-        <div>
-          <!-- <el-avatar :siz  e="50" :src="circleUrl"></el-avatar> -->
+        <div class="infoBox" v-if="isToken">
+          <span>{{ userInfo.name }}</span>
+          <el-dropdown
+            class="avatar-container right-menu-item hover-effect"
+            trigger="click"
+          >
+            <div class="avatar-wrapper">
+              <el-avatar :size="40" :src="userInfo.avatar" alt=""></el-avatar>
+              <i class="el-icon-caret-bottom" />
+            </div>
+            <el-dropdown-menu slot="dropdown">
+              <!-- <router-link to="/profile">
+            <el-dropdown-item>个人中心</el-dropdown-item>
+          </router-link> -->
+              <el-dropdown-item>
+                <span style="display:block;" @click="logout"> 退 出</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+        <div v-else>
           <el-button @click="dialogTableVisible = true">登录</el-button>
         </div>
       </div>
@@ -15,7 +34,8 @@
         <div>StopBoot</div>
         <p>一站式代码生成工具，三步完成一个后台项目</p>
         <div>
-          <el-button type="primary" round @click="$router.push('/project')">开始你的创作
+          <el-button type="primary" round @click="$router.push('/project')"
+            >开始你的创作
           </el-button>
         </div>
       </div>
@@ -31,7 +51,7 @@
               1
             </div>
             <div class="desing-step-title">
-              创建项目
+              创建项目、数据库
             </div>
           </el-card>
         </el-col>
@@ -41,7 +61,7 @@
               2
             </div>
             <div class="desing-step-title">
-              编辑接口
+              编辑接口、表
             </div>
           </el-card>
         </el-col>
@@ -51,7 +71,7 @@
               3
             </div>
             <div class="desing-step-title">
-              生成代码
+              生成代码、sql
             </div>
           </el-card>
         </el-col>
@@ -113,7 +133,7 @@
 // @ is an alias to /src
 
 import { AuthLoginRequest } from "@/sdk/modules/auth/login";
-import { setCookies } from "@/utils/cookies-util.js";
+import { setCookies, getCookies ,removeCookies} from "@/utils/cookies-util.js";
 export default {
   name: "Home",
   components: {},
@@ -132,11 +152,18 @@ export default {
   },
   mounted() {},
   computed: {
-    token() {
-      return;
+    isToken() {
+      return getCookies("Authorization") != null;
+    },
+    userInfo() {
+      return JSON.parse(getCookies("userInfo"));
     },
   },
   methods: {
+    logout() {
+      removeCookies("Authorization");
+      location.reload();
+    },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
@@ -154,6 +181,7 @@ export default {
             setCookies("userInfo", JSON.stringify(res.data.userInfo));
             setCookies("name", res.data.userInfo.name);
             setCookies("avatar", res.data.userInfo.avatar);
+            location.reload();
           });
         } else {
           console.log("login 参数错误");
@@ -179,6 +207,13 @@ export default {
     justify-content: space-between;
     align-items: center;
     width: 1280px;
+    .infoBox {
+      display: flex;
+      align-items: center;
+      & > span {
+        margin-right: 10px;
+      }
+    }
   }
   .logoBox {
     display: flex;
